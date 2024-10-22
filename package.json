@@ -1,0 +1,14 @@
+{
+  "name": "medicontrol",
+  "version": "1.0.0",
+  "description": "Gerenciamento de cuidados e medicamentos com um paciente",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Grupo 15 - Projeto Integrador II UNIVESP",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
