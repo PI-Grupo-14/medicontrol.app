@@ -3,31 +3,42 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
         <link rel="shortcut icon" href="/images/favicon.ico" />
+        <link rel="stylesheet" href="style.css" />
         <title>MediControl</title>
     </head>
-    <body>
-        <nav>
+
+    <body>        
+        <nav class="navegacao">
             <ul>
                 <li><a href="#">Sobre</a></li>
             </ul>
         </nav>
+        <main>
+            <div class="logo">
+                <img src="/images/Logo_Medi-removebg-preview 1.png" alt="Logomarca MediControl" />
+            </div>
+                <form>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Insira seu endereço de e-mail" />
 
-        <img src="/images/Logo_Medi-removebg-preview 1.png" alt="Logomarca MediControl" />
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" placeholder="Insira sua senha" />
 
-        <form action="login" method="post">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Insira seu endereço de e-mail" required />
+                    <button type="submit">Entrar</button>
 
-            <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="Insira sua senha" required />
-
-            <button type="submit">Entrar</button>
-            <p><a href="#">Esqueceu sua senha?</a></p>
-
-            <p>Ainda não tem conta? <a href="#">Faça seu cadastro!</a></p>
-        </form>
-
-        <footer><span>Rodapé aqui</span></footer>
+                    
+                </form>
+                <div class="register">
+                    <p>Ainda não tem conta? <a href="#">Faça seu Cadastro!</a></p>
+                </div>
+        </main>
+            <footer>
+                
+            </footer>
+        </div>
     </body>
 </html>
