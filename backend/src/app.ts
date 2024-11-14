@@ -1,12 +1,13 @@
-import express, {Request, Response} from 'express';
+import express from 'express';
 import {getUser} from './controllers/users-controller';
+import router from './routes/routes';
 
 function createApp() {
     const app = express();
 
     app.use(express.json());
 
-    app.get('/', getUser);
+    app.use('/', router);
 
     return app;
 }
