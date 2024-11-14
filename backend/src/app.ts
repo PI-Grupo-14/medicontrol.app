@@ -1,13 +1,12 @@
 import express, {Request, Response} from 'express';
+import {getUser} from './controllers/users-controller';
 
 function createApp() {
     const app = express();
 
     app.use(express.json());
 
-    app.get('/', (req: Request, res: Response) => {
-        res.status(200).json({nome: 'Fabio Silva'});
-    });
+    app.get('/', getUser);
 
     return app;
 }
