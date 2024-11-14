@@ -1,1 +1,1 @@
-#medicontrol.app
+# MediControl.app
