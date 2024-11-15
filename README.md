@@ -1,1 +1,4 @@
-#medicontrol.app
+# MediControl.app
+
+Frontend: medicontrol/
+Backend: backend/
