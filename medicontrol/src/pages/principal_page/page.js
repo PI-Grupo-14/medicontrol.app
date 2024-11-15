@@ -30,7 +30,7 @@ const RoundedTextField = styled(TextField)({
 });
 
 
-const Principal_Page = () => {
+const PrincipalPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = (event) => { setSearchTerm(event.target.value); };
@@ -67,4 +67,4 @@ const Principal_Page = () => {
 
 }
 
-export default Principal_Page;
+export default PrincipalPage;

@@ -66,7 +66,7 @@ padding: 10px 30px;
 
 `
 
-export default function Cadastro_Profissional(){
+export default function CadastroProfissional(){
     const[nome, setNome] = useState('');
     const[nascimento, setNascimento] = useState('');
     const[telefone, setTelefone] = useState('');

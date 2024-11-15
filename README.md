@@ -1,1 +1,0 @@
-#medicontrol.app
