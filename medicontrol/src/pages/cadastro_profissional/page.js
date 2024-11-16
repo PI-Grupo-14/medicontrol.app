@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CampoDigitacao from "../../components/campoDigitacao/index";
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const ContainerPrincipal = styled.div`
@@ -76,6 +77,13 @@ export default function CadastroProfissional(){
     const[senha, setSenha] = useState('');
     const[senhaVerificada, setSenhaVerificada] = useState('');
 
+    const navigate = useNavigate()
+
+    // TODO: Implement handle backend call here
+    const cadastrarButtonClickHandle = () => {
+        navigate('/');
+    }
+
 
     return(
         <>
@@ -142,8 +150,8 @@ export default function CadastroProfissional(){
                     
                     </Formulario>
                     <AreaBotoes>
-                        <BotaoCustomizado2 onClick={() => {}} type="submit">Cancelar</BotaoCustomizado2>
-                        <BotaoCustomizado onClick={() => {}} type="submit">Cadastrar</BotaoCustomizado>
+                        <BotaoCustomizado2 onClick={() => {navigate(-1)}} type="submit">Cancelar</BotaoCustomizado2>
+                        <BotaoCustomizado onClick={cadastrarButtonClickHandle} type="submit">Cadastrar</BotaoCustomizado>
                         
                     </AreaBotoes>
             </Container>

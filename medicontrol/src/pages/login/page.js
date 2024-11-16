@@ -3,6 +3,8 @@ import CampoDigitacao from "../../components/campoDigitacao/index";
 import { useState } from "react";
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
@@ -69,6 +71,12 @@ align-items: center;
 export default function Login(){
     const[email, setEmail] = useState('');
     const[senha, setSenha] = useState('');
+    const navigate = useNavigate();
+
+    // TODO: Implement login endpoint call here
+    const handleLoginClick = () => {
+        navigate('/home');
+    }
     return(
         <>
         <ContainerPrincipal>
@@ -90,9 +98,10 @@ export default function Login(){
                 onChange={setSenha}
                 label="Senha"/>
             </Formulario>
-            <BotaoCustomizado type="submit" onClick={() => {}}>Entrar</BotaoCustomizado>
+            <BotaoCustomizado type="submit" onClick={handleLoginClick}>Entrar</BotaoCustomizado>
             <Paragrafo>Esqueceu sua senha?</Paragrafo>
-            <ParagrafoCadastro>Ainda não tem conta? <LinkEstilizado href="/cadastro">Faça seu Cadastro!</LinkEstilizado></ParagrafoCadastro>
+            <ParagrafoCadastro>Ainda não tem conta? 
+                <LinkEstilizado href="/cadastro_profissional">Faça seu Cadastro!</LinkEstilizado></ParagrafoCadastro>
             </ContainerLogin>
         </ContainerPrincipal>
         </>

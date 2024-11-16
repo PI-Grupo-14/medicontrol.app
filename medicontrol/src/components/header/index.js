@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Avatar, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 
 
 const ImagemEstilizada = styled.img`
@@ -12,6 +14,8 @@ height: 100px;
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +24,10 @@ const Header = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const handleMenuClick = (route) => {
+    navigate(route);
+  }
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#5CCEEE' }}>
@@ -43,9 +51,11 @@ const Header = () => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuClose}>Home</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Atividades</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Pacientes</MenuItem>
+          <MenuItem onClick={() => handleMenuClick('/home')}>Home</MenuItem>
+          <MenuItem onClick={() => handleMenuClick('/atividades')}>Atividades</MenuItem>
+          <MenuItem onClick={() => handleMenuClick('/pacientes')}>Pacientes</MenuItem>
+          <MenuItem onClick={() => handleMenuClick('/')}>Logout</MenuItem>
+
         </Menu>
       </Toolbar>
     </AppBar>
