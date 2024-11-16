@@ -4,6 +4,7 @@ import BasicTimePicker from "../../components/campoHora"
 import styled from "styled-components";
 import { Stack, TextField, InputLabel, MenuItem, FormControl, Select } from '@mui/material'
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -81,10 +82,16 @@ const RegistroAtividades = () => {
 
     const pacientes = [{ id: 1, name: "Lucas" }, { id: 2, name: "Maria" }, { id: 3, name: "Geovanna" }];
     const [nome, setNome] = useState("")
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         setNome(event.target.value);
     };
+
+    // TODO: Impelemnt backend call to save paciente here
+    const salvarButtonClickHandler = () => {
+        navigate('/home');
+    }
 
     return (
         <>
@@ -162,8 +169,8 @@ const RegistroAtividades = () => {
                         />
                     </Stack>
                     <AreaBotoes>
-                        <BotaoCustomizado2 onClick={() => { }} type="submit">Cancelar</BotaoCustomizado2>
-                        <BotaoCustomizado onClick={() => { }} type="submit">Salvar</BotaoCustomizado>
+                        <BotaoCustomizado2 onClick={() => navigate(-1)} type="submit">Cancelar</BotaoCustomizado2>
+                        <BotaoCustomizado onClick={salvarButtonClickHandler} type="submit">Salvar</BotaoCustomizado>
                     </AreaBotoes>
 
 

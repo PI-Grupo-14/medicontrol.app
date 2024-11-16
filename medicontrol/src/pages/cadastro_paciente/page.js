@@ -4,6 +4,7 @@ import CampoDigitacao from "../../components/campoDigitacao/index";
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Stack } from '@mui/material'
 import React, { useState } from "react";
 import TextoExpansivel from "../../components/textoExpansivel";
+import { useNavigate } from "react-router-dom";
 
 
 const ContainerPrincipal = styled.div`
@@ -74,6 +75,13 @@ const CadastroPaciente = () => {
     const [convenio, setConvenio] = useState('');
     const [numConvenio, setNumConvenio] = useState('');
     const [hospital, setHospital] = useState('');
+
+    const navigate = useNavigate();
+
+    //TODO: Implement backend call
+    const handleCreateButtonClick = () => {
+        navigate('/home');
+    }
 
     return (
         <>
@@ -170,8 +178,8 @@ const CadastroPaciente = () => {
 
                     </Stack>
                     <AreaBotoes>
-                    <BotaoCustomizado2 onClick={() => {}} type="submit">Cancelar</BotaoCustomizado2>
-                    <BotaoCustomizado onClick={() => {}} type="submit">Salvar</BotaoCustomizado>
+                    <BotaoCustomizado2 onClick={() => {navigate(-1)}} type="submit">Cancelar</BotaoCustomizado2>
+                    <BotaoCustomizado onClick={handleCreateButtonClick} type="submit">Salvar</BotaoCustomizado>
                     </AreaBotoes>
                    
                 </Container>

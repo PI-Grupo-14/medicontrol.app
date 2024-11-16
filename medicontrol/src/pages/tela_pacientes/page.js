@@ -4,6 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import {Box, Button, InputAdornment, TextField} from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
 
 const StyledTableCell = styled(TableCell)({
@@ -57,7 +58,8 @@ const TelaPacientes = () =>{
     const filteredRows = rows.filter(row =>
         row.name.toLowerCase().includes(searchTerm.toLowerCase()),);
 
-
+        const navigate = useNavigate(); 
+        const handleClick = () => { navigate('/cadastro_paciente');};
 
     return(
         <>
@@ -95,7 +97,7 @@ const TelaPacientes = () =>{
                 </TableBody>
             </Table>
         </TableContainer>
-        <RoundedButton variant="extended" color="primary">
+        <RoundedButton variant="extended" color="primary" onClick={handleClick}>
                     <PersonAddAltIcon sx={{ mr: 1 }} /> Adicionar Paciente
                 </RoundedButton>
         </>
