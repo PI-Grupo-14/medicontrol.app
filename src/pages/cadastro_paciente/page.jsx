@@ -75,13 +75,44 @@ const CadastroPaciente = () => {
     const [convenio, setConvenio] = useState('');
     const [numConvenio, setNumConvenio] = useState('');
     const [hospital, setHospital] = useState('');
+    const [genero, setGenero] = useState('');
+    const [alergia, setAlergia] = useState('');
+    const [observacao, setObservacao] = useState('');
 
     const navigate = useNavigate();
 
-    //TODO: Implement backend call
-    const handleCreateButtonClick = () => {
-        navigate('/home');
-    }
+    const handleCreateButtonClick = async () => {
+        try {
+            const response = await fetch('http://localhost:3333/paciente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    profissional_id: 1, // Replace with actual value
+                    nome: nomePaciente,
+                    data_nascimento: nascimentoPaciente,
+                    contato_emergencia: contatoEmg,
+                    convenio_medico: convenio,
+                    numero_convenio: numConvenio,
+                    hospital_conveniado: hospital,
+                    genero: "feminino",
+                    alergia: "a",
+                    observacao: "a",
+                }),
+            });
+
+            if (response.ok) {
+                alert('Paciente cadastrado com sucesso!');
+                navigate('/home');
+            } else {
+                const errorData = await response.json();
+                alert(`Erro: ${errorData.message || 'Falha ao cadastrar paciente'}`);
+            }
+        } catch (error) {
+            alert('Erro: Não foi possível conectar ao servidor.');
+        }
+    };
 
     return (
         <>

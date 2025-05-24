@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import CampoDigitacao from "../../components/campoDigitacao/index";
-import { useState } from "react";
-
-import React from "react";
-import { useNavigate } from "react-router-dom";
-
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
@@ -15,7 +12,6 @@ display: flex;
 flex-direction: column;
 align-items: center;
 `
-
 
 const ContainerLogin = styled.div`
 background-color: white;
@@ -68,42 +64,67 @@ flex-direction: column;
 align-items: center;
 `
 
-export default function Login(){
-    const[email, setEmail] = useState('');
-    const[senha, setSenha] = useState('');
+export default function Login() {
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
     const navigate = useNavigate();
 
-    // TODO: Implement login endpoint call here
-    const handleLoginClick = () => {
-        navigate('/home');
-    }
-    return(
-        <>
-        <ContainerPrincipal>
-            <ContainerLogin>
+    const handleLoginClick = async () => {
+        try {
+            const response = await fetch('http://localhost:3333/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, senha }),
+            });
 
-            <Imagem src='logomedi.png'alt="logo medicontrol"/>
-            <Formulario>
-                <CampoDigitacao 
-                valor={email} 
-                tipo="text"
-                placeholder="Insira seu endereço de e-mail" 
+            if (response.ok) {
+                const responseData = await response.json();
+                const profissionalId = responseData.profissional?.profissional_id;
+
+                if (profissionalId) {
+                    navigate('/home', {
+                        state: { profissionalId : profissionalId }
+                    });
+                } else {
+                    alert('Erro: ID do profissional não encontrado.');
+                }
+            } else {
+                const errorData = await response.json();
+                alert(`Erro: ${errorData.message || 'Falha ao fazer login'}`);
+            }
+        } catch (error) {
+            alert('Erro: Não foi possível conectar ao servidor.');
+        }
+    };
+
+    return (
+        <>
+            <ContainerPrincipal>
+                <ContainerLogin>
+                    <Imagem src="logomedi.png" alt="logo medicontrol" />
+                    <Formulario>
+                        <CampoDigitacao
+                            valor={email}
+                            tipo="text"
+                            placeholder="Insira seu endereço de e-mail"
                 onChange={setEmail} 
                 label="Email"/>
             
-                <CampoDigitacao
-                valor={senha}
-                tipo="password"
-                placeholder="Insira sua senha"
+                        <CampoDigitacao
+                            valor={senha}
+                            tipo="password"
+                            placeholder="Insira sua senha"
                 onChange={setSenha}
                 label="Senha"/>
-            </Formulario>
-            <BotaoCustomizado type="submit" onClick={handleLoginClick}>Entrar</BotaoCustomizado>
-            <Paragrafo>Esqueceu sua senha?</Paragrafo>
-            <ParagrafoCadastro>Ainda não tem conta? 
+                    </Formulario>
+                    <BotaoCustomizado type="submit" onClick={handleLoginClick}>Entrar</BotaoCustomizado>
+                    <Paragrafo>Esqueceu sua senha?</Paragrafo>
+                    <ParagrafoCadastro>Ainda não tem conta? 
                 <LinkEstilizado href="/cadastro_profissional">Faça seu Cadastro!</LinkEstilizado></ParagrafoCadastro>
-            </ContainerLogin>
-        </ContainerPrincipal>
+                </ContainerLogin>
+            </ContainerPrincipal>
         </>
     )
 }

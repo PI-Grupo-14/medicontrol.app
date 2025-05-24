@@ -6,10 +6,7 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import SearchIcon from '@mui/icons-material/Search';
 import {Box, Button, Stack, InputAdornment, TextField} from '@mui/material';
 import { styled } from '@mui/system';
-import { useNavigate } from "react-router-dom";
-
-
-
+import { useNavigate, useLocation} from "react-router-dom";
 
 const RoundedButton = styled(Button)({
     borderRadius: '20px',
@@ -40,6 +37,9 @@ const PrincipalPage = () => {
 
     const navigate = useNavigate();
 
+    const location = useLocation();
+    const profissional_id = location.state?.profissionalId;
+
     return (
         <>
         <Stack spacing={5}>
@@ -57,7 +57,7 @@ const PrincipalPage = () => {
                     Visualizar pacientes
                 </RoundedButton>
             </Box>
-            <TablePacientes searchTerm={searchTerm}/>
+            <TablePacientes searchTerm={searchTerm} profissionalId={profissional_id}/>
             <Box display="flex" justifyContent="center" padding="16px">
                 <RoundedButton variant="extended" color="primary" onClick={() => {navigate('/atividades')}}>
                     <AddIcon sx={{ mr: 1 }} /> Criar atividade

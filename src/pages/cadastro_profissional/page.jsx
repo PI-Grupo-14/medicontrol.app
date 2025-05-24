@@ -40,7 +40,7 @@ justify-content: space-between;
 width: 70%;
 `
 const BotaoCustomizado = styled.button`
-width: 40%;
+width: 60%;
 background-color: #1C9CE5;
 border-radius: 8px;
 color: #FFFFFF;
@@ -80,9 +80,40 @@ export default function CadastroProfissional(){
     const navigate = useNavigate()
 
     // TODO: Implement handle backend call here
-    const cadastrarButtonClickHandle = () => {
-        navigate('/');
-    }
+    const handleCadastroClick = async () => {
+        if (senha !== senhaVerificada) {
+            alert('Erro: As senhas não coincidem.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3333/profissional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome:nome,
+                    nascimento:nascimento,
+                    telefone: telefone,
+                    email: email,
+                    profissao: profissao,
+                    numero_registro: registro,
+                    senha:senha,
+                }),
+            });
+
+            if (response.ok) {
+                alert('Cadatro realizado com sucesso!');
+                navigate(navigate(-1));
+            } else {
+                const errorData = await response.json();
+                alert(`Erro: ${errorData.message || 'Falha ao realizar o cadastro'}`);
+            }
+        } catch (error) {
+            alert('Erro: Não foi possível conectar ao servidor.');
+        }
+    };
 
 
     return(
@@ -151,7 +182,7 @@ export default function CadastroProfissional(){
                     </Formulario>
                     <AreaBotoes>
                         <BotaoCustomizado2 onClick={() => {navigate(-1)}} type="submit">Cancelar</BotaoCustomizado2>
-                        <BotaoCustomizado onClick={cadastrarButtonClickHandle} type="submit">Cadastrar</BotaoCustomizado>
+                        <BotaoCustomizado onClick={handleCadastroClick} type="submit">Cadastrar</BotaoCustomizado>
                         
                     </AreaBotoes>
             </Container>
