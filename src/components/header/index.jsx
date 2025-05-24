@@ -10,13 +10,17 @@ import { ProfissionalContext } from "../../App";
 const ImagemEstilizada = styled.img`
 width: 100px;
 height: 100px;
-`
 
+`
+const NomeLogin = styled.p`
+line-height: 15px;
+font-family: Besley;
+`
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const {_, setProfissional} = useContext(ProfissionalContext);
+  const {profissional, setProfissional} = useContext(ProfissionalContext);
 
 
   const handleMenuOpen = (event) => {
@@ -39,11 +43,13 @@ const Header = () => {
       <Toolbar>
         {/* Avatar in the left corner */}
         <IconButton edge="start" color="inherit" aria-label="avatar">
-          <Avatar alt="img perfil" src="perfil_enfermeira.jpg" />
+          <Avatar alt="img perfil" src="foto-logo.png" />
         </IconButton>
 
+        <NomeLogin>{profissional.nome}</NomeLogin>
+
         {/* Image in the middle */}
-        <Box flexGrow={1} display="flex" justifyContent="center">
+        <Box flexGrow={1} display="flex" justifyContent="center" alignItems="center">
           <ImagemEstilizada src='LogoMedi_semfundo.png' alt="logo medicontrol" style={{ height: '80px' }} />
         </Box>
 
