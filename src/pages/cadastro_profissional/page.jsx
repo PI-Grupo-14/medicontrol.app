@@ -82,10 +82,7 @@ export default function CadastroProfissional(){
 
     // TODO: Implement handle backend call here
     const handleCadastroClick = async () => {
-        if (senha !== senhaVerificada) {
-            alert('Erro: As senhas não coincidem.');
-            return;
-        }
+       
 
         try {
             const response = await fetch(`${API_URL}/profissional`, {
@@ -109,7 +106,7 @@ export default function CadastroProfissional(){
                 navigate(navigate(-1));
             } else {
                 const errorData = await response.json();
-                alert(`Erro: ${errorData.message || 'Falha ao realizar o cadastro'}`);
+                alert(`${errorData.error || 'Falha ao realizar o cadastro'}`);
             }
         } catch (error) {
             alert('Erro: Não foi possível conectar ao servidor.');

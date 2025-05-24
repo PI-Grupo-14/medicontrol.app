@@ -92,7 +92,8 @@ export default function Login() {
                 }
             } else {
                 const errorData = await response.json();
-                alert(`Erro: ${errorData.message || 'Falha ao fazer login'}`);
+                console.log(errorData);
+                alert(`${errorData.error || 'Falha ao fazer login'}`);
             }
         } catch (error) {
             alert('Erro: Não foi possível conectar ao servidor.');

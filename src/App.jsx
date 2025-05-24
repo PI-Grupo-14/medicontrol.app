@@ -12,7 +12,7 @@ import ReactDOM from "react-dom/client";
 // Utilizado para manter o contexto do profissional logado
 export const ProfissionalContext = React.createContext(null);
 
-export const API_URL = import.meta.env.VITE_BACKEND_DOMAIN || 'http://localhost:3333';
+export const API_URL = import.meta.env.VITE_BACKEND_DOMAIN || 'https://medicontrol-backend.onrender.com/';
 
 export default function App() {
   // Recupera o profissional do localStorage ao carregar a aplicação
