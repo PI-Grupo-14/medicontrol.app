@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
 import { styled } from '@mui/system';
+import { ProfissionalContext, API_URL } from "../../App";
 
 const StyledTableCell = styled(TableCell)({
     fontFamily: 'Besley',
     fontSize: '20px'
 });
 
-const TablePacientes = ({searchTerm, profissional_id}) => {
+const TablePacientes = ({searchTerm, profissional}) => {
      
     // React states
     // Manage rows and allow search
     const [rows, setRows] = useState([]);
+    if(!profissional) {
+        profissional = useContext(ProfissionalContext)[0];
+    }
+    
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3333/profissional/${profissional_id}/atividades-nao-concluidas`);
+                const response = await fetch(`${API_URL}/profissional/${profissional.profissional_id}/atividades-nao-concluidas`);
                 if (response.ok) {
                     const data = await response.json();
                     // Map API response to match table structure
-                    const formattedData = data.map(item => ({
+                    const formattedData = data.atividades.map(item => ({
                         id: item.atividade_id,
                         name: item.nome_paciente,
                         activity: item.nome_atividade,
@@ -36,7 +41,7 @@ const TablePacientes = ({searchTerm, profissional_id}) => {
         };
 
         fetchData();
-    }, [profissional_id]);
+    }, [profissional]);
 
     // Will be a backend call instead of this delay
     // Function to remove a concluded row

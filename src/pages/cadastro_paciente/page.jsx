@@ -2,9 +2,10 @@ import Header from "../../components/header"
 import styled from "styled-components";
 import CampoDigitacao from "../../components/campoDigitacao/index";
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Stack } from '@mui/material'
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TextoExpansivel from "../../components/textoExpansivel";
 import { useNavigate } from "react-router-dom";
+import { ProfissionalContext } from "../../App";
 
 
 const ContainerPrincipal = styled.div`
@@ -79,6 +80,8 @@ const CadastroPaciente = () => {
     const [alergia, setAlergia] = useState('');
     const [observacao, setObservacao] = useState('');
 
+    const {profissional, _} = useContext(ProfissionalContext);
+
     const navigate = useNavigate();
 
     const handleCreateButtonClick = async () => {
@@ -89,7 +92,7 @@ const CadastroPaciente = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    profissional_id: 1, // Replace with actual value
+                    profissional_id: profissional.profissional_id, // Replace with actual value
                     nome: nomePaciente,
                     data_nascimento: nascimentoPaciente,
                     contato_emergencia: contatoEmg,

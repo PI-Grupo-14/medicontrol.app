@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import CampoDigitacao from "../../components/campoDigitacao/index";
-import React, { useState } from 'react';
+import React, { useState, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ProfissionalContext } from "../../App";
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
@@ -63,11 +64,12 @@ display: flex;
 flex-direction: column;
 align-items: center;
 `
-
 export default function Login() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+
     const navigate = useNavigate();
+    const {_, setProfissional} = React.useContext(ProfissionalContext);
 
     const handleLoginClick = async () => {
         try {
@@ -81,12 +83,10 @@ export default function Login() {
 
             if (response.ok) {
                 const responseData = await response.json();
-                const profissionalId = responseData.profissional?.profissional_id;
 
-                if (profissionalId) {
-                    navigate('/home', {
-                        state: { profissionalId : profissionalId }
-                    });
+                if (responseData.profissional) {
+                    setProfissional(responseData.profissional);
+                    navigate('/home');
                 } else {
                     alert('Erro: ID do profissional não encontrado.');
                 }

@@ -3,8 +3,9 @@ import ControlledComponent from "../../components/campoData"
 import BasicTimePicker from "../../components/campoHora"
 import styled from "styled-components";
 import { Stack, TextField, InputLabel, MenuItem, FormControl, Select } from '@mui/material'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { ProfissionalContext } from "../../App";
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
@@ -74,18 +75,19 @@ padding: 10px 20px;
 
 `
 
-const RegistroAtividades = ({ profissional_id }) => {
+const RegistroAtividades = () => {
     const [pacientes, setPacientes] = useState([]);
     const [id, setId] = useState("");
     const [nome, setNome] = useState("");
     const [data, setData] = useState("");
     const [horario, setHorario] = useState("");
+    const { profissional, _ } = React.useContext(ProfissionalContext);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPacientes = async () => {
             try {
-                const response = await fetch(`http://localhost:3333/profissional/1/pacientes`);
+                const response = await fetch(`http://localhost:3333/profissional/${profissional.profissional_id}/pacientes`);
                 if (response.ok) {
                     const data = await response.json();
                     // Map API response to match the expected structure
@@ -104,7 +106,7 @@ const RegistroAtividades = ({ profissional_id }) => {
         };
 
         fetchPacientes();
-    }, [profissional_id]);
+    }, [profissional]);
 
     const handleChange = (event) => {
         let selectedId = event.target.value;
@@ -122,7 +124,6 @@ const RegistroAtividades = ({ profissional_id }) => {
                 horario: horario,
                 concluido: false, // Sempre definido como false
             })
-            console.log(requestBody);
             const response = await fetch('http://localhost:3333/atividade', {
                 method: 'POST',
                 headers: {
@@ -202,7 +203,7 @@ const RegistroAtividades = ({ profissional_id }) => {
                         >
                             <TituloEstilizado>Defina o alarme: </TituloEstilizado>
                             <ControlledComponent value={data} onChange={setData} />
-                            <BasicTimePicker value={horario} onChange={setHorario} />
+                            <BasicTimePicker onChange={setHorario} />
                         </Stack>
                         <TituloEstilizado>Anotações</TituloEstilizado>
                         <CampoEstilizado

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Avatar, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { ProfissionalContext } from "../../App";
 
 
 
@@ -15,6 +16,7 @@ height: 100px;
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const {_, setProfissional} = useContext(ProfissionalContext);
 
 
   const handleMenuOpen = (event) => {
@@ -25,7 +27,10 @@ const Header = () => {
     setAnchorEl(null);
   };
 
-  const handleMenuClick = (route) => {
+  const handleMenuClick = (route, action) => {
+    if(action){
+      action();
+    }
     navigate(route);
   }
 
@@ -54,7 +59,7 @@ const Header = () => {
           <MenuItem onClick={() => handleMenuClick('/home')}>Home</MenuItem>
           <MenuItem onClick={() => handleMenuClick('/atividades')}>Atividades</MenuItem>
           <MenuItem onClick={() => handleMenuClick('/pacientes')}>Pacientes</MenuItem>
-          <MenuItem onClick={() => handleMenuClick('/')}>Logout</MenuItem>
+          <MenuItem onClick={() => handleMenuClick('/', setProfissional)}>Logout</MenuItem>
 
         </Menu>
       </Toolbar>

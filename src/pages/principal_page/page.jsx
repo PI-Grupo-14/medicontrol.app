@@ -1,12 +1,13 @@
 import Header from "../../components/header";
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import TablePacientes from "../../components/tabela_pacientes";
 import AddIcon from '@mui/icons-material/Add';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import SearchIcon from '@mui/icons-material/Search';
 import {Box, Button, Stack, InputAdornment, TextField} from '@mui/material';
 import { styled } from '@mui/system';
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { ProfissionalContext } from "../../App";
 
 const RoundedButton = styled(Button)({
     borderRadius: '20px',
@@ -35,10 +36,9 @@ const PrincipalPage = () => {
 
     const handleSearch = (event) => { setSearchTerm(event.target.value); };
 
-    const navigate = useNavigate();
-
-    const location = useLocation();
-    const profissional_id = location.state?.profissionalId;
+    const navigate = useNavigate(); 
+    
+    const {profissional, _} = useContext(ProfissionalContext);
 
     return (
         <>
@@ -57,7 +57,7 @@ const PrincipalPage = () => {
                     Visualizar pacientes
                 </RoundedButton>
             </Box>
-            <TablePacientes searchTerm={searchTerm} profissionalId={profissional_id}/>
+            <TablePacientes searchTerm={searchTerm} profissional={profissional}/>
             <Box display="flex" justifyContent="center" padding="16px">
                 <RoundedButton variant="extended" color="primary" onClick={() => {navigate('/atividades')}}>
                     <AddIcon sx={{ mr: 1 }} /> Criar atividade
