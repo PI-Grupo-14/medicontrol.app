@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/system';
-import { ProfissionalContext } from '../../App';
+import { ProfissionalContext,API_URL } from '../../App';
 
 const StyledTableCell = styled(TableCell)({
     fontFamily: 'Besley',
@@ -42,7 +42,7 @@ const TelaPacientes = () => {
     useEffect(() => {
         const fetchPacientes = async () => {
             try {
-                const response = await fetch(`http://localhost:3333/profissional/${profissional.profissional_id}/pacientes`);
+                const response = await fetch(`${API_URL}/profissional/${profissional.profissional_id}/pacientes`);
                 if (response.ok) {
                     const data = await response.json();
                     // Map API response to match the expected structure

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import CampoDigitacao from "../../components/campoDigitacao/index";
 import React, { useState, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProfissionalContext } from "../../App";
+import { ProfissionalContext,API_URL } from "../../App";
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
@@ -73,7 +73,7 @@ export default function Login() {
 
     const handleLoginClick = async () => {
         try {
-            const response = await fetch('http://localhost:3333/login', {
+            const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

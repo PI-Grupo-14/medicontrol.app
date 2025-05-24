@@ -5,7 +5,7 @@ import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Stack } fr
 import React, { useState, useContext } from "react";
 import TextoExpansivel from "../../components/textoExpansivel";
 import { useNavigate } from "react-router-dom";
-import { ProfissionalContext } from "../../App";
+import { ProfissionalContext, API_URL } from "../../App";
 
 
 const ContainerPrincipal = styled.div`
@@ -31,7 +31,7 @@ const TituloEstilizado = styled.h1`
 font-weight: 900;
 font-size: 30px;
 line-height: 25px;
-color: #0097B2;
+color: #1C9CE5;
 font-family: Besley;
 `
 const AreaBotoes = styled.div`
@@ -86,7 +86,7 @@ const CadastroPaciente = () => {
 
     const handleCreateButtonClick = async () => {
         try {
-            const response = await fetch('http://localhost:3333/paciente', {
+            const response = await fetch(`${API_URL}/paciente`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

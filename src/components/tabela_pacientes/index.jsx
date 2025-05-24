@@ -29,7 +29,7 @@ const TablePacientes = ({searchTerm, profissional}) => {
                         id: item.atividade_id,
                         name: item.nome_paciente,
                         activity: item.nome_atividade,
-                        time: item.horario,
+                        time: item.data + " | " + item.horario,
                     }));
                     setRows(formattedData);
                 } else {
@@ -43,10 +43,30 @@ const TablePacientes = ({searchTerm, profissional}) => {
         fetchData();
     }, [profissional]);
 
-    // Will be a backend call instead of this delay
     // Function to remove a concluded row
-    const handleRemoveRow = (id) => {
-        setTimeout(() => { setRows(rows.filter(row => row.id !== id)); }, 300);
+    const handleRemoveRow = async (id) => {
+        try {
+            const response = await fetch(`${API_URL}/atividade/concluir`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    profissional_id: profissional.profissional_id, // Assuming profissional is available in context or props
+                    atividade_id: id,
+                }),
+            });
+
+            if (response.ok) {
+                // Remove the row from the table after successful API call
+                setRows(rows.filter(row => row.id !== id));
+            } else {
+                const errorData = await response.json();
+                console.error(`Erro ao concluir atividade: ${errorData.message || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            console.error('Erro ao conectar ao servidor:', error);
+        }
     };
 
     // Functions to deal with the internal search
