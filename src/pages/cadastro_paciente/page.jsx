@@ -2,9 +2,10 @@ import Header from "../../components/header"
 import styled from "styled-components";
 import CampoDigitacao from "../../components/campoDigitacao/index";
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Stack } from '@mui/material'
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TextoExpansivel from "../../components/textoExpansivel";
 import { useNavigate } from "react-router-dom";
+import { ProfissionalContext, API_URL } from "../../App";
 
 
 const ContainerPrincipal = styled.div`
@@ -30,7 +31,7 @@ const TituloEstilizado = styled.h1`
 font-weight: 900;
 font-size: 30px;
 line-height: 25px;
-color: #0097B2;
+color: #1C9CE5;
 font-family: Besley;
 `
 const AreaBotoes = styled.div`
@@ -75,13 +76,46 @@ const CadastroPaciente = () => {
     const [convenio, setConvenio] = useState('');
     const [numConvenio, setNumConvenio] = useState('');
     const [hospital, setHospital] = useState('');
+    const [genero, setGenero] = useState('');
+    const [alergia, setAlergia] = useState('');
+    const [observacao, setObservacao] = useState('');
+
+    const {profissional, _} = useContext(ProfissionalContext);
 
     const navigate = useNavigate();
 
-    //TODO: Implement backend call
-    const handleCreateButtonClick = () => {
-        navigate('/home');
-    }
+    const handleCreateButtonClick = async () => {
+        try {
+            const response = await fetch(`${API_URL}/paciente`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    profissional_id: profissional.profissional_id, // Replace with actual value
+                    nome: nomePaciente,
+                    data_nascimento: nascimentoPaciente,
+                    contato_emergencia: contatoEmg,
+                    convenio_medico: convenio,
+                    numero_convenio: numConvenio,
+                    hospital_conveniado: hospital,
+                    genero: "feminino",
+                    alergia: "a",
+                    observacao: "a",
+                }),
+            });
+
+            if (response.ok) {
+                alert('Paciente cadastrado com sucesso!');
+                navigate('/home');
+            } else {
+                const errorData = await response.json();
+                alert(`Erro: ${errorData.message || 'Falha ao cadastrar paciente'}`);
+            }
+        } catch (error) {
+            alert('Erro: Não foi possível conectar ao servidor.');
+        }
+    };
 
     return (
         <>

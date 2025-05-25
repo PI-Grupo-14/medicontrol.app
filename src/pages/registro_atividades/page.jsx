@@ -3,11 +3,9 @@ import ControlledComponent from "../../components/campoData"
 import BasicTimePicker from "../../components/campoHora"
 import styled from "styled-components";
 import { Stack, TextField, InputLabel, MenuItem, FormControl, Select } from '@mui/material'
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-
+import { ProfissionalContext , API_URL} from "../../App";
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
@@ -77,21 +75,91 @@ padding: 10px 20px;
 
 `
 
-
 const RegistroAtividades = () => {
-
-    const pacientes = [{ id: 1, name: "Lucas" }, { id: 2, name: "Maria" }, { id: 3, name: "Geovanna" }];
-    const [nome, setNome] = useState("")
+    const [pacientes, setPacientes] = useState([]);
+    const [id, setId] = useState("");
+    const [nomeAtividade, setNomeAtividade] = useState("");
+    const [data, setData] = useState("");
+    const [horario, setHorario] = useState("");
+    const { profissional, _ } = React.useContext(ProfissionalContext);
     const navigate = useNavigate();
 
+    function formatDate(dateString) {
+        const date = new Date(dateString); // Convert the string to a Date object
+        const day = String(date.getDate()).padStart(2, '0'); // Get the day and pad with 0 if needed
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Get the month (0-indexed) and pad with 0
+        const year = date.getFullYear(); // Get the full year
+    
+        return `${day}/${month}/${year}`; // Return the formatted date
+    }
+
+    function formatTime(dateString) {
+        const date = new Date(dateString); // Convert the string to a Date object
+        let hours = date.getHours(); // Get the hours
+        const minutes = String(date.getMinutes()).padStart(2, '0'); // Get the minutes and pad with 0 if needed
+        const ampm = hours >= 12 ? 'PM' : 'AM'; // Determine AM or PM
+        hours = hours % 12 || 12; // Convert to 12-hour format (0 becomes 12)
+    
+        return `${hours}:${minutes} ${ampm}`; // Return the formatted time
+    }
+
+    useEffect(() => {
+        const fetchPacientes = async () => {
+            try {
+                const response = await fetch(`${API_URL}/profissional/${profissional.profissional_id}/pacientes`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Map API response to match the expected structure
+                    const formattedPacientes = data.pacientes.map(paciente => ({
+                        id: paciente.id, // Map paciente_id to id
+                        nome: paciente.nome,
+                        telefone: paciente.telefone,
+                    }));
+                    setPacientes(formattedPacientes);
+                } else {
+                    console.error('Erro ao buscar dados dos pacientes');
+                }
+            } catch (error) {
+                console.error('Erro ao conectar ao servidor:', error);
+            }
+        };
+
+        fetchPacientes();
+    }, [profissional]);
+
     const handleChange = (event) => {
-        setNome(event.target.value);
+        let selectedId = event.target.value;
+        setId(selectedId); // Atualiza o id com o valor selecionado
     };
 
-    // TODO: Impelemnt backend call to save paciente here
-    const salvarButtonClickHandler = () => {
-        navigate('/home');
-    }
+    const salvarButtonClickHandler = async () => {
+        try {
+            const requestBody = JSON.stringify({
+                paciente_id: id,
+                nome: nomeAtividade,
+                data: data,
+                horario: horario,
+                concluido: false, // Sempre definido como false
+            })
+            const response = await fetch(`${API_URL}/atividade`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: requestBody,
+            });
+
+            if (response.ok) {
+                alert('Atividade salva com sucesso!');
+                navigate('/home'); // Navega para a página inicial após salvar
+            } else {
+                const errorData = await response.json();
+                alert(`Erro: ${errorData.message || 'Falha ao salvar atividade'}`);
+            }
+        } catch (error) {
+            alert('Erro: Não foi possível conectar ao servidor.');
+        }
+    };
 
     return (
         <>
@@ -115,6 +183,7 @@ const RegistroAtividades = () => {
                             label=""
                             defaultValue=""
                             multiline
+                            onChange={(e) => setNomeAtividade(e.target.value)}
                             rows={2}
 
                         />
@@ -132,15 +201,12 @@ const RegistroAtividades = () => {
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={nome}
+                                    value={id}
                                     label="Paciente"
                                     onChange={handleChange}
                                 >
                                     {pacientes.map((paciente) => (
-
-                                        <MenuItem value={paciente.id}>{paciente.name}</MenuItem>
-
-                                    ))}
+                                        <MenuItem value={paciente.id}>{paciente.nome}</MenuItem>))}
                                 </Select>
                             </FormControl>
                         </Stack>
@@ -154,8 +220,8 @@ const RegistroAtividades = () => {
                             }}
                         >
                             <TituloEstilizado>Defina o alarme: </TituloEstilizado>
-                            <ControlledComponent />
-                            <BasicTimePicker />
+                            <ControlledComponent value={data} onChange={(e) => setData(formatDate(e.$d))} />
+                            <BasicTimePicker onChange={(e) => setHorario(formatTime(e.$d))} />
                         </Stack>
                         <TituloEstilizado>Anotações</TituloEstilizado>
                         <CampoEstilizado

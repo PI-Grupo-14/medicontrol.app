@@ -1,11 +1,12 @@
 import Header from '../../components/header';
-import React, {useState} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import {Box, Button, InputAdornment, TextField} from '@mui/material';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { Box, Button, InputAdornment, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import {useNavigate} from 'react-router-dom';
-import {styled} from '@mui/system';
+import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
+import { ProfissionalContext,API_URL } from '../../App';
 
 const StyledTableCell = styled(TableCell)({
     fontFamily: 'Besley',
@@ -35,26 +36,40 @@ const RoundedTextField = styled(TextField)({
 
 const TelaPacientes = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [userData, setUserData] = useState([]);
+    const { profissional, _ } = useContext(ProfissionalContext);
+
+    useEffect(() => {
+        const fetchPacientes = async () => {
+            try {
+                const response = await fetch(`${API_URL}/profissional/${profissional.profissional_id}/pacientes`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Map API response to match the expected structure
+                    const formattedData = data.pacientes.map(paciente => ({
+                        id: paciente.id,
+                        name: paciente.nome,
+                        telefone: paciente.contato_emergencia,
+                        convenio: paciente.convenio_medico, // Map convenio_medico to convenio
+                    }));
+                    setUserData(formattedData);
+                } else {
+                    console.error('Erro ao buscar dados dos pacientes');
+                }
+            } catch (error) {
+                console.error('Erro ao conectar ao servidor:', error);
+            }
+        };
+
+        fetchPacientes();
+    }, [profissional]);
 
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    const userData = [
-        {id: 1, name: 'Lucas', telefone: '(11)95673-7635', convenio: 'Amil'},
-        {id: 2, name: 'João', telefone: '(11)95673-7635', convenio: 'Bradesco'},
-        {id: 3, name: 'Maria', telefone: '(11)95673-7635', convenio: 'Amil'},
-        {id: 4, name: 'Pedro', telefone: '(11)95673-7635', convenio: 'Bradesco'},
-        {id: 5, name: 'Kleber', telefone: '(11)95673-7635', convenio: 'Bradesco'},
-        {id: 6, name: 'José', telefone: '(11)95673-7635', convenio: 'Amil'},
-        {id: 7, name: 'Recebec', telefone: '(11)95673-7635', convenio: 'Bradesco'}
-    ];
-    const [rows] = useState(userData);
-
-    // Will be a backend call instead of this delay
-
     // Functions to deal with the internal search
-    const filteredRows = rows.filter((row) => row.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredRows = userData.filter((row) => row.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const navigate = useNavigate();
     const handleClick = () => {
@@ -83,10 +98,10 @@ const TelaPacientes = () => {
                 />
             </Box>
 
-            <TableContainer component={Paper} style={{padding: '2em', maxHeight: '400px', maxWidth: '90%', marginLeft: '4em', overflowY: 'auto'}}>
+            <TableContainer component={Paper} style={{ padding: '2em', maxHeight: '400px', maxWidth: '90%', marginLeft: '4em', overflowY: 'auto' }}>
                 <Table>
                     <TableHead>
-                        <TableRow style={{backgroundColor: '#5CCEEE'}}>
+                        <TableRow style={{ backgroundColor: '#5CCEEE' }}>
                             <StyledTableCell>Id</StyledTableCell>
                             <StyledTableCell>Nome</StyledTableCell>
                             <StyledTableCell>Contato SOS</StyledTableCell>
@@ -106,7 +121,7 @@ const TelaPacientes = () => {
                 </Table>
             </TableContainer>
             <RoundedButton variant='extended' color='primary' onClick={handleClick}>
-                <PersonAddAltIcon sx={{mr: 1}} /> Adicionar Paciente
+                <PersonAddAltIcon sx={{ mr: 1 }} /> Adicionar Paciente
             </RoundedButton>
         </>
     );

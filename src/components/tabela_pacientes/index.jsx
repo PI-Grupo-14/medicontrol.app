@@ -1,38 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
 import { styled } from '@mui/system';
-
+import { ProfissionalContext, API_URL } from "../../App";
 
 const StyledTableCell = styled(TableCell)({
     fontFamily: 'Besley',
     fontSize: '20px'
 });
 
-const TablePacientes = ({searchTerm}) => {
-    // TODO: Get this data from get API.
-    const userData = [
-        { id: 1, name: 'Lucas', activity: 'Atividade 1', time: '00:00' },
-        { id: 2, name: 'João', activity: 'Atividade 2', time: '00:00' },
-        { id: 3, name: 'Maria', activity: 'Atividade 1', time: '00:00' },
-        { id: 4, name: 'Lucas', activity: 'Atividade 2', time: '00:00' },
-        { id: 5, name: 'João', activity: 'Atividade 1', time: '00:00' },
-        { id: 6, name: 'Maria', activity: 'Atividade 2', time: '00:00' },
-        { id: 7, name: 'Lucas', activity: 'Atividade 1', time: '00:00' },
-        { id: 8, name: 'João', activity: 'Atividade 2', time: '00:00' },
-        { id: 9, name: 'Maria', activity: 'Atividade 1', time: '00:00' },
-        { id: 10, name: 'Lucas', activity: 'Atividade 2', time: '00:00' },
-        { id: 11, name: 'João', activity: 'Atividade 1', time: '00:00' },
-        { id: 12, name: 'Maria', activity: 'Atividade 2', time: '00:00' }
-    ];
-
+const TablePacientes = ({searchTerm, profissional}) => {
+     
     // React states
     // Manage rows and allow search
-    const [rows, setRows] = useState(userData);
+    const [rows, setRows] = useState([]);
+    if(!profissional) {
+        profissional = useContext(ProfissionalContext)[0];
+    }
+    
 
-    // Will be a backend call instead of this delay
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${API_URL}/profissional/${profissional.profissional_id}/atividades-nao-concluidas`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Map API response to match table structure
+                    const formattedData = data.atividades.map(item => ({
+                        id: item.atividade_id,
+                        name: item.nome_paciente,
+                        activity: item.nome_atividade,
+                        time: item.data + " | " + item.horario,
+                    }));
+                    setRows(formattedData);
+                } else {
+                    console.error('Erro ao buscar dados da API');
+                }
+            } catch (error) {
+                console.error('Erro ao conectar ao servidor:', error);
+            }
+        };
+
+        fetchData();
+    }, [profissional]);
+
     // Function to remove a concluded row
-    const handleRemoveRow = (id) => {
-        setTimeout(() => { setRows(rows.filter(row => row.id !== id)); }, 300);
+    const handleRemoveRow = async (id) => {
+        try {
+            const response = await fetch(`${API_URL}/atividade/concluir`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    profissional_id: profissional.profissional_id, // Assuming profissional is available in context or props
+                    atividade_id: id,
+                }),
+            });
+
+            if (response.ok) {
+                // Remove the row from the table after successful API call
+                setRows(rows.filter(row => row.id !== id));
+            } else {
+                const errorData = await response.json();
+                console.error(`Erro ao concluir atividade: ${errorData.message || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            console.error('Erro ao conectar ao servidor:', error);
+        }
     };
 
     // Functions to deal with the internal search

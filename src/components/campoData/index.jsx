@@ -5,13 +5,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export default function ControlledComponent() {
-  const [value, setValue] = React.useState(null);
+export default function ControlledComponent({onChange}) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker']}>
-        <DatePicker label="Data" value={value} onChange={(newValue) => setValue(newValue)} />
+        <DatePicker label="Data" onChange={onChange} />
       </DemoContainer>
     </LocalizationProvider>
   );

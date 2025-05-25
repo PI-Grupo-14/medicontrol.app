@@ -4,12 +4,13 @@ import CampoDigitacao from "../../components/campoDigitacao/index";
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../App";
 
 
 const ContainerPrincipal = styled.div`
 background-color: #F1EBEB;
 width: 100vw;
-height: 100%;
+height: 100vh;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -18,7 +19,7 @@ align-items: center;
 const Container = styled.div`
 background-color: white;
 width: 50vw;
-height: 100%;
+height: 100vh;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -54,7 +55,7 @@ font-size: 20px;
 
 `
 const BotaoCustomizado2 = styled.button`
-width: 40%;
+width: 30%;
 background-color: #EDEDED;
 color: #828282;
 border-radius: 8px;
@@ -80,9 +81,37 @@ export default function CadastroProfissional(){
     const navigate = useNavigate()
 
     // TODO: Implement handle backend call here
-    const cadastrarButtonClickHandle = () => {
-        navigate('/');
-    }
+    const handleCadastroClick = async () => {
+       
+
+        try {
+            const response = await fetch(`${API_URL}/profissional`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome:nome,
+                    nascimento:nascimento,
+                    telefone: telefone,
+                    email: email,
+                    profissao: profissao,
+                    numero_registro: registro,
+                    senha:senha,
+                }),
+            });
+
+            if (response.ok) {
+                alert('Cadatro realizado com sucesso!');
+                navigate(navigate(-1));
+            } else {
+                const errorData = await response.json();
+                alert(`${errorData.error || 'Falha ao realizar o cadastro'}`);
+            }
+        } catch (error) {
+            alert('Erro: Não foi possível conectar ao servidor.');
+        }
+    };
 
 
     return(
@@ -141,17 +170,11 @@ export default function CadastroProfissional(){
                         onChange={setSenha}
                         label="Crie uma senha"/>
 
-                        <CampoDigitacao 
-                        valor={senhaVerificada} 
-                        tipo="text"
-                        placeholder="Repita a senha anterior" 
-                        onChange={setSenhaVerificada} 
-                        label="Repita a senha"/>
                     
                     </Formulario>
                     <AreaBotoes>
                         <BotaoCustomizado2 onClick={() => {navigate(-1)}} type="submit">Cancelar</BotaoCustomizado2>
-                        <BotaoCustomizado onClick={cadastrarButtonClickHandle} type="submit">Cadastrar</BotaoCustomizado>
+                        <BotaoCustomizado onClick={handleCadastroClick} type="submit">Cadastrar</BotaoCustomizado>
                         
                     </AreaBotoes>
             </Container>
